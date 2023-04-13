@@ -1,6 +1,6 @@
 # fruits-test-task
 
-### [Click here for Demo](https://eslint.org/)
+### [Click here for Demo](https://fruity.techpss.com/)
 
 ### Use the below detail for Demo
 ```sh
