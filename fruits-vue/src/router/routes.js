@@ -15,6 +15,14 @@ const routes = [
     }
   },
   {
+    path: '/favorite-fruits',
+    name: 'favorite-fruits',
+    component: () => import('../views/FavFruitsView.vue'),
+    meta: {
+      middleware: [auth]
+    }
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../views/LoginView.vue'),

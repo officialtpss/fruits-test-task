@@ -14,8 +14,8 @@ axiosInstance.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`
     }
 
-    config.headers['Accept'] = "application/json";
-    config.headers['Content-Type'] = "application/json;charset=UTF-8";
+    config.headers['Accept'] = 'application/json'
+    config.headers['Content-Type'] = 'application/json'
 
     // Do something before request is sent
     return config

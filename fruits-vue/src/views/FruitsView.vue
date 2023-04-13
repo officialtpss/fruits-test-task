@@ -47,9 +47,18 @@
               </div>
             </template>
             <template #actions>
-              <setting-outlined key="setting" />
-              <edit-outlined key="edit" />
-              <ellipsis-outlined key="ellipsis" />
+              <HeartFilled
+                key="fav-rm"
+                title="Remove from Favourite"
+                @click="handleFavouriteFruit(fruit, 'remove')"
+                v-if="favouriteFruits.find((id) => id === fruit.id)"
+              />
+              <HeartOutlined
+                key="fav-add"
+                title="Add to Favourite"
+                @click="handleFavouriteFruit(fruit, 'add')"
+                v-else
+              />
             </template>
           </a-card>
         </a-col>
@@ -72,7 +81,7 @@
 <script setup>
 import { inject, ref, reactive } from 'vue'
 import { useAlertStore } from '../stores/alert.store'
-import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons-vue'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons-vue'
 
 const axiosInstance = inject('axios')
 
@@ -82,6 +91,7 @@ const page = ref(1)
 const total = ref(0)
 const limit = ref(12)
 const fruits = ref([])
+const favouriteFruits = ref([])
 
 const formState = reactive({
   name: '',
@@ -98,6 +108,7 @@ async function getFruitList(page = 1, itemsPerPage = 12) {
     })
     .then((response) => {
       fruits.value = response.data.data.fruits
+      favouriteFruits.value = response.data.data.favourites
       total.value = response.data.data.total
     })
     .catch((error) => {
@@ -117,6 +128,28 @@ const paginationCallback = (page, itemsPerPage) => {
 
 const findFruitList = () => {
   getFruitList(1, limit.value)
+}
+
+const handleFavouriteFruit = async (fruit, action = 'add') => {
+  await axiosInstance
+    .post('add-to-favorite', { fruitId: fruit.id })
+    .then(() => {
+      if (action === 'add') {
+        alertStore.success(`${fruit.name} added to your favourite list.`)
+      } else {
+        alertStore.success(`${fruit.name} removed from your favourite list.`)
+      }
+
+      getFruitList(page.value, limit.value)
+    })
+    .catch((error) => {
+      alertStore.error(
+        error?.response?.data?.message ??
+          error?.response?.data?.error ??
+          error?.message ??
+          'Something went wrong. Please try again later!'
+      )
+    })
 }
 </script>
 

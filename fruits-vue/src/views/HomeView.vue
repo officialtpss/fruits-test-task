@@ -7,7 +7,7 @@
   <!-- Content -->
   <div :style="{ background: '#fff', padding: '24px', minHeight: '380px' }">
     <a-row justify="center" :style="{ padding: '25px 0' }">
-      <h1>Welcome</h1>
+      <h1>Welcome to Fruity App</h1>
     </a-row>
   </div>
 </template>

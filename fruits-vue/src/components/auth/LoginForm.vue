@@ -24,20 +24,7 @@
     <a-form-item
       label="Password"
       name="password"
-      :rules="[
-        {
-          required: true,
-          message: 'Please input your password!'
-        },
-        {
-          min: 6,
-          message: 'Password must be minimum 6 characters!'
-        },
-        {
-          max: 16,
-          message: 'Password must be maximum 16 characters'
-        }
-      ]"
+      :rules="[{ required: true, message: 'Please input your password!' }]"
     >
       <a-input-password v-model:value="formState.password">
         <template #prefix>
@@ -46,14 +33,19 @@
       </a-input-password>
     </a-form-item>
 
-    <a-form-item>
+    <!--    <a-form-item>
       <a-form-item name="remember" no-style>
         <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
       </a-form-item>
-    </a-form-item>
+    </a-form-item>-->
 
     <a-form-item>
-      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button">
+      <a-button
+        :disabled="disabled || formState.loading"
+        type="primary"
+        html-type="submit"
+        class="login-form-button"
+      >
         Log in
       </a-button>
     </a-form-item>
@@ -65,13 +57,14 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { useAuthStore } from './../../stores/auth.store.js'
 import { useAlertStore } from './../../stores/alert.store.js'
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 const alertStore = useAlertStore()
 
 const formState = reactive({
   email: '',
   password: '',
-  remember: true
+  remember: true,
+  loading: false
 })
 
 const emit = defineEmits(['success'])
@@ -81,11 +74,17 @@ const disabled = computed(() => {
 })
 
 const onFinish = async (values) => {
-  const user = await auth.login(values.email, values.password)
+  formState.loading = true
+
+  authStore.returnUrl = 'fruits'
+
+  const user = await authStore.login(values.email, values.password)
 
   if (user) {
     emit('success', user)
   }
+
+  formState.loading = false
 }
 
 const onFinishFailed = (errorInfo) => {

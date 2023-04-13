@@ -6,7 +6,8 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
     user: null,
-    token: localStorage.getItem('token') ?? null
+    token: localStorage.getItem('token') ?? null,
+    returnUrl: null
   }),
 
   actions: {
