@@ -1,4 +1,6 @@
 import axios from 'axios'
+import router from "../../router";
+import {useAuthStore} from "../../stores/auth.store";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -37,7 +39,8 @@ axiosInstance.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 401) {
-      localStorage.removeItem('token')
+        const authStore = useAuthStore();
+        authStore.logout()
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
